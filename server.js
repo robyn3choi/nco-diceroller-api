@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://nco-diceroller.herokuapp.com"],
     methods: ["GET", "POST"],
   },
 });
@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  console.log("connected");
   socket.on("roll", ({ actionDiceCount, dangerDiceCount }) => {
     const actionDice = [];
     const dangerDice = [];
@@ -40,6 +41,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("playerJoined", (name) => {
+    console.log("playerJoined");
     players.push({ name, id: socket.id });
     io.emit("playersUpdated", players);
   });
